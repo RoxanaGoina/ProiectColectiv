@@ -1,11 +1,11 @@
 package com.example.proiectcolectiv.model;
 
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 
-public class Question {
+public class QuestionPremium {
     private Integer questionID;
-    private User1 user;
+    private UserNewAdd user;
     private List<String> questionLabels;
     private String questionTitle;
     private String questionContent;
@@ -16,7 +16,7 @@ public class Question {
     private String code;
     private List<Answer> answers;
 
-    public Question(Integer questionID, User1 user, List<String> questionLabels, String questionTitle, String questionContent, Integer likes, Integer dislikes, Date date, String category, String code, List<Answer> answers) {
+    public QuestionPremium(Integer questionID, UserNewAdd user, List<String> questionLabels, String questionTitle, String questionContent, Integer likes, Integer dislikes, Date date, String category, String code, List<Answer> answers) {
         this.questionID = questionID;
         this.user = user;
         this.questionLabels = questionLabels;
@@ -29,7 +29,7 @@ public class Question {
         this.code = code;
         this.answers = answers;
     }
-    public Question(){}
+    public QuestionPremium(){}
 
     public Integer getQuestionID() {
         return questionID;
@@ -39,20 +39,20 @@ public class Question {
         this.questionID = questionID;
     }
 
+    public UserNewAdd getUser() {
+        return user;
+    }
+
+    public void setUser(UserNewAdd user) {
+        this.user = user;
+    }
+
     public List<String> getQuestionLabels() {
         return questionLabels;
     }
 
     public void setQuestionLabels(List<String> questionLabels) {
         this.questionLabels = questionLabels;
-    }
-
-    public User1 getUser() {
-        return user;
-    }
-
-    public void setUser(User1 user) {
-        this.user = user;
     }
 
     public String getQuestionTitle() {

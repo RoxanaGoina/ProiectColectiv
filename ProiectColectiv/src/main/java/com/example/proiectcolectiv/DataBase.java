@@ -39,14 +39,15 @@ public class DataBase {
             String sqlCreate = "CREATE TABLE IF NOT EXISTS " + tableName
                     + "  (postID           INTEGER unique auto_increment, "
                     + "   userID            VARCHAR(255)  ,"
-                    + "   questionID         Integer,"
+                    + "   questionTitle         VARCHAR(255),"
                     + "   questionContent          VARCHAR(255),"
                     + "   likes           INTEGER,"
                     + "   dislikes     INTEGER,"
                     + "   date DATE,"
-                    + "   category VARCHAR(255)," +
-                    "primary key (postID)," +
-                    "foreign key (userID) references User(userID) )";
+                    + "   category VARCHAR(255),"
+                    + "   questionCode VARCHAR(255) ,"
+                    + "primary key (postID),"
+                    + "foreign key (userID) references User(userID) )";
 
             statement.executeUpdate(sqlCreate);
             conn.close();
@@ -63,17 +64,19 @@ public class DataBase {
             Statement statement = conn.createStatement();
             String sqlCreate = "CREATE TABLE IF NOT EXISTS " + tableName
                     + "  (commentID           INTEGER unique auto_increment,"
-                    + "   userID            VARCHAR(255)  ,"
+                    + "   userID              VARCHAR(255)  ,"
                     + "   parentPostID        INTEGER , "
                     + "   parentCommID         INTEGER ,"
                     + "   content VARCHAR(255),"
                     + "   likes           INTEGER,"
                     + "   dislikes     INTEGER,"
-                    + "   date DATE, " +
-                    "primary key (commentID)," +
-                    "foreign key (userID) references User(userID)," +
-                    "foreign key (parentPostID) references Post(postID)," +
-                    "foreign key (parentCommID) references Comment(commentID))";
+                    + "   date DATE, "
+                    + " commentTitle VARCHAR(255),"
+                    + " commentCode VARCHAR(255), "
+                    + "primary key (commentID),"
+                    + "foreign key (userID) references User(userID),"
+                    + "foreign key (parentPostID) references Post(postID),"
+                    + "foreign key (parentCommID) references Comment(commentID))";
 
             statement.executeUpdate(sqlCreate);
             conn.close();

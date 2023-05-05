@@ -28,8 +28,11 @@ public class Comment {
     private Integer dislikes;
     @Column(name = "date")
     private Date date;
-
-    public Comment(int commentID, String userID, Integer parentPostID, Integer parentCommID, String content,Integer likes, Integer dislikes, Date date) {
+    @Column(name="commentTitle")
+    private String commentTitle;
+    @Column(name="commentCode")
+    private String commentCode;
+    public Comment(Integer commentID, String userID, Integer parentPostID, Integer parentCommID, String content,Integer likes, Integer dislikes, Date date,String commentTitle,String commentCode) {
         this.commentID = commentID;
         this.userID = userID;
         this.parentPostID = parentPostID;
@@ -38,9 +41,27 @@ public class Comment {
         this.likes = likes;
         this.dislikes = dislikes;
         this.date = date;
+        this.commentCode=commentCode;
+        this.commentTitle=commentTitle;
     }
 
     public Comment() {
+    }
+
+    public String getCommentTitle() {
+        return commentTitle;
+    }
+
+    public void setCommentTitle(String commentTitle) {
+        this.commentTitle = commentTitle;
+    }
+
+    public String getCommentCode() {
+        return commentCode;
+    }
+
+    public void setCommentCode(String commentCode) {
+        this.commentCode = commentCode;
     }
 
     public Integer getCommentID() {

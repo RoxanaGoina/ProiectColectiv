@@ -1,6 +1,6 @@
 package com.example.proiectcolectiv.model;
 
-import java.util.Date;
+import java.sql.Date;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -12,11 +12,11 @@ import jakarta.persistence.Table;
 public  class Post {
     @Id
     @Column(name = "postID")
-    private int postID;
+    private Integer postID;
     @Column(name = "userID")
     private String userID;
-    @Column(name = "questionID")
-    private String questionID;
+    @Column(name = "questionTitle")
+    private String questionTitle;
     @Column(name = "questionContent")
     private String questionContent;
     @Column(name = "likes")
@@ -28,24 +28,37 @@ public  class Post {
     private Date date;
     @Column(name = "category")
     private String category;
+    @Column(name="questionCode")
+    private String questionCode;
 
-    public Post(int postID, String userID, String questionID, String questionContent, int likes, int disikes, Date date, String category) {
+
+
+    public Post(Integer postID, String userID, String questionTitle, String questionContent, Integer likes, Integer disikes, Date date, String category,String questionCode) {
         this.postID = postID;
         this.userID = userID;
-        this.questionID = questionID;
+        this.questionTitle = questionTitle;
         this.questionContent = questionContent;
         this.likes = likes;
         this.disikes = disikes;
         this.date = date;
         this.category = category;
+        this.questionCode=questionCode;
     }
     public Post(){}
 
-    public int getPostID() {
+    public String getQuestionCode() {
+        return questionCode;
+    }
+
+    public void setQuestionCode(String questionCode) {
+        this.questionCode = questionCode;
+    }
+
+    public Integer getPostID() {
         return postID;
     }
 
-    public void setPostID(int postID) {
+    public void setPostID(Integer postID) {
         this.postID = postID;
     }
 
@@ -57,12 +70,12 @@ public  class Post {
         this.userID = userID;
     }
 
-    public String getQuestionID() {
-        return questionID;
+    public String getQuestionTitle() {
+        return questionTitle;
     }
 
-    public void setQuestionID(String questionID) {
-        this.questionID = questionID;
+    public void setQuestionTitle(String questionID) {
+        this.questionTitle = questionID;
     }
 
     public String getQuestionContent() {

@@ -6,7 +6,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 
-import java.util.Date;
+import java.sql.Date;
 @Entity
 @Table(name = "user")
 public  class User {
@@ -15,8 +15,8 @@ public  class User {
     private String uid;
     @Column(name = "displayName")
     private String displayName;
-    @Column(name = "url")
-    private String url;
+    @Column(name = "photoURL")
+    private String photoURL;
     @Column(name = "email")
     private String email;
     @Column(name = "password")
@@ -26,10 +26,10 @@ public  class User {
     @Column(name = "position")
     private String position;
 
-    public User(String uid, String displayName, String url, String email, String password, Date joinDate, String position) {
+    public User(String uid, String displayName, String photoURL, String email, String password, Date joinDate, String position) {
         this.uid = uid;
         this.displayName = displayName;
-        this.url = url;
+        this.photoURL = photoURL;
         this.email = email;
         this.password = password;
         this.joinDate = joinDate;
@@ -53,12 +53,12 @@ public  class User {
         this.displayName = displayName;
     }
 
-    public String getUrl() {
-        return url;
+    public String getPhotoURL() {
+        return photoURL;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setPhotoURL(String url) {
+        this.photoURL = url;
     }
 
     public String getEmail() {

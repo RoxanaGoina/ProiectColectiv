@@ -4,10 +4,9 @@ import com.example.proiectcolectiv.model.*;
 import com.example.proiectcolectiv.repository.*;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
 
@@ -48,80 +47,103 @@ public class UserController {
 
     }
 
-
+    @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/getAllUsers")
     @Transactional
     public List<User> getAllUsers(){
 
-        return userRepository.findAll();
+        return  userRepository.findAll();
     }
 
-
+    @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/users/{id}")
     @Transactional
     public UserPremium getDummyUserPremium(@PathVariable("id") String id) {
-        UserPremium a = new UserPremium();
-        User user = userRepository.findById(id).get();
-        a.setUid(user.getUid());
-        a.setPhotoURL(user.getUrl());
-        UserPremium.Stats stats=new UserPremium.Stats(postRepository.getUserQuestions(id),postRepository.getUserLikes(id),postRepository.getUserDislikes(id));
-        a.setStats(stats);
-        List<Badges> b=badgesRepository.getUserBadges(id);
-        Map<String, List<String>> m=new HashMap<>();
-        for(Badges i: b){
-            if(m.containsKey(i.getBadgeType()))
-            {   List<String> l=new ArrayList<>();
-                l.addAll(m.get(i.getBadgeType()));
-                l.add(i.getIdBadges());
-                m.put(i.getBadgeType(),l);
+        try {
+            UserPremium a = new UserPremium();
+            User user = userRepository.getUserID(id);
+            a.setUid(user.getUid());
+            a.setPhotoURL(user.getPhotoURL());
+            UserPremium.Stats stats = new UserPremium.Stats(postRepository.getUserQuestions(id), postRepository.getUserLikes(id), postRepository.getUserDislikes(id));
+            a.setStats(stats);
+            List<Badges> b = badgesRepository.getUserBadges(id);
+            Map<String, List<String>> m = new HashMap<>();
+            for (Badges i : b) {
+                if (m.containsKey(i.getBadgeType())) {
+                    List<String> l = new ArrayList<>();
+                    l.addAll(m.get(i.getBadgeType()));
+                    l.add(i.getIdBadges());
+                    m.put(i.getBadgeType(), l);
 
+                } else {
+                    List<String> list = new ArrayList<>();
+                    list.add(i.getIdBadges());
+                    m.put(i.getBadgeType(), list);
+                }
             }
-            else {
-                List<String> list=new ArrayList<>();
-                list.add(i.getIdBadges());
-                m.put(i.getBadgeType(),list);
-            }
-        }
-        a.setBadges(m);
+            a.setBadges(m);
 
-        List<Question> questions=new ArrayList<>();
-        //questions.setQuestionID();
-        List<Post> post=postRepository.getPostbyID(id);
-        //System.out.println("A");
-        for(Post i:post){
-            Question q=new Question();
-            q.setQuestionID(i.getPostID());
-            User1 u=new User1();
-            u.setDisplayName(userRepository.getUserDisplayName(i.getUserID()));
-            u.setPhotoURL(userRepository.getUserURL(i.getUserID()));
-            q.setUser(u);
-            List<String> label=labelRepository.getPostbyID(i.getPostID());
-            q.setQuestionLabel(label);
-            q.setQuestionContent(i.getQuestionContent());
-            q.setQuestionTitle(i.getQuestionID());
-            q.setLikes(i.getLikes());
-            q.setDislikes(i.getDisikes());
-            q.setCategory(i.getCategory());
-            q.setCode(i.getQuestionContent());
-            List<Comment> comment=commentRepository.getPostbyID(i.getPostID());
-            List<Answer> answers=new ArrayList<>();
-            for(Comment c:comment ){
-                Answer answer=new Answer();
-                answer.setCode(c.getContent());
-                User1 user1=new User1();
-                user1.setPhotoURL(userRepository.getUserURL(c.getUserID()));
-                user1.setDisplayName(userRepository.getUserDisplayName(c.getUserID()));
-                answer.setUser(user1);
-                answer.setAnswerTitle(c.getContent());
-                answer.setAnswerDetails(c.getContent());
-                answers.add(answer);
+            List<Question> questions = new ArrayList<>();
+            //questions.setQuestionID();
+            List<Post> post = postRepository.getPostbyID(id);
+            //System.out.println("A");
+            for (Post i : post) {
+                Question q = new Question();
+                q.setQuestionID(i.getPostID());
+                User1 u = new User1();
+                u.setDisplayName(userRepository.getUserDisplayName(i.getUserID()));
+                u.setPhotoURL(userRepository.getUserURL(i.getUserID()));
+                q.setUser(u);
+                List<String> label = labelRepository.getPostbyID(i.getPostID());
+                q.setQuestionLabels(label);
+                q.setQuestionContent(i.getQuestionContent());
+                q.setQuestionTitle(i.getQuestionTitle());
+                q.setLikes(i.getLikes());
+                q.setDislikes(i.getDisikes());
+                q.setCategory(i.getCategory());
+                q.setCode(i.getQuestionCode());
+                List<Comment> comment = commentRepository.getPostbyID(i.getPostID());
+                List<Answer> answers = new ArrayList<>();
+                for (Comment c : comment) {
+                    Answer answer = new Answer();
+                    answer.setCode(c.getCommentCode());
+                    User1 user1 = new User1();
+                    user1.setPhotoURL(userRepository.getUserURL(c.getUserID()));
+                    user1.setDisplayName(userRepository.getUserDisplayName(c.getUserID()));
+                    answer.setUser(user1);
+                    answer.setAnswerTitle(c.getCommentTitle());
+                    answer.setAnswerDetails(c.getContent());
+                    answers.add(answer);
+                }
+                q.setAnswers(answers);
+                questions.add(q);
             }
-            q.setAnswers(answers);
-            questions.add(q);
+            a.setQuestions(questions);
+            return a;
+        }catch(NoSuchElementException e){
         }
-        a.setQuestions(questions);
-        return a;
+        throw new ResponseStatusException(
+                HttpStatus.NOT_FOUND, "entity not found"
+        );
+
     }
+    @CrossOrigin(origins = "http://localhost:3000")
+    @PostMapping("/users")
+    @Transactional
+    public void createUser(@RequestBody User newUser){
+        //System.out.println("am intrat in POST");
+        User a = new User(newUser.getUid(),newUser.getDisplayName(),newUser.getPhotoURL(),null,null,newUser.getJoinDate(),null);
+       // System.out.println("Acum se salveaza");
+        userRepository.saveUser(a.getUid(),a.getDisplayName(),a.getPhotoURL(),a.getJoinDate());
+    }
+    @CrossOrigin(origins = "http://localhost:3000")
+    @PatchMapping("/users/{uid}")
+    @Transactional
+    public void alterUser(@RequestBody User alterUser){
+        User a=new User(alterUser.getUid(),alterUser.getDisplayName(),alterUser.getPhotoURL(),alterUser.getEmail(),alterUser.getPassword(),alterUser.getJoinDate(),alterUser.getPosition());
+        userRepository.saveUser(a.getUid(),a.getDisplayName(),a.getPhotoURL(),a.getJoinDate());
+    }
+
 
 
 }
